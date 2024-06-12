@@ -1,0 +1,26 @@
+################################################################################
+# Copyright © 2024 Analog Devices Inc. All Rights Reserved.
+# This software is proprietary to Analog Devices, Inc. and its licensors.
+################################################################################
+ubl_config_version = "v0.1"
+chip_type = "TM01_FPGA_GENERIC"
+
+[part_table]
+version = "v1.1"
+size = 0x0000        # Do not make any memory boundary checks
+sector_size = 0x1000 # Default sector size for most memories
+
+[[part_table.partition]] # Writable app partition for user application development.
+name = "user_dev_app"
+type = "APP"
+offset = 0x8000
+size = 0x8000
+writable = true
+
+[[part_table.partition]] # Some space allocated to store whatever the user wants.
+name     = "stim_data"
+type     = "STIMULUS_DATA"
+offset = 0x10000
+size = 0x32000
+writable = true
+

@@ -1,0 +1,5 @@
+python/openocd.log
+run/openocd.log
+python/__pycache__/
+.DS_Store
+capture_data/tmp

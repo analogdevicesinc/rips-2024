@@ -1,0 +1,67 @@
+################################################################################
+# Copyright © 2024 Analog Devices Inc. All Rights Reserved.
+# This software is proprietary to Analog Devices, Inc. and its licensors.
+################################################################################
+# ioconfig_dock5.toml
+io_config_version = "v0.1"
+
+##### Communication interfaces #####
+### UART interface
+[uart]
+enabled         = true
+pin_ic_tx       = 0        # 0, 6
+pin_ic_rx       = 1        # 1, 7
+baud_rate       = "auto16" # 9600, 19200, 38400, 57600, 115200, 1000000, "auto8", "auto16"
+chip_address    = 1        # 1-255
+host_address    = 255      # 1-255 (different than chip_address)
+
+### SPI slave interface
+[spi_slave]
+enabled      = true
+spi_block    = "SPI1"   # "SPI0" or "SPI1"
+pin_spi0_sck = 11       # 6, 11 (needed when spi_block = "SPI0")
+
+##### Feedback interfaces #####
+### Hall encoder
+# When enabled, it requires pin_ux, pin_v and pin_wy to be set
+[hall]
+enabled = true
+pin_ux  = 7         # 2, 7, 9
+pin_v   = 15        # 3, 15
+pin_wy  = 8         # 4, 8, 10
+
+### ABN encoder 1
+# When enabled, it requires pin_a and pin_b to be set.
+# If using an N channel, define pin_n.
+[abn1]
+enabled = true
+pin_a   = 17        # 5, 8, 17
+pin_b   = 18        # 1, 13, 18
+pin_n   = 16        # 14, 16 (optional)
+
+[abn2]
+enabled = false
+pin_a   = 15   # 6, 15
+pin_b   = 16   # 7, 11, 16
+
+##### External memory #####
+[spi_flash]
+enabled      = true
+spi_block    = "SPI0"   # "SPI0" or "SPI1"
+pin_cs       = 4        # 0-18
+frequency    = 10000000 # Hz
+pin_spi0_sck = 11       # 6, 11 (needed when spi_block = "SPI0")
+
+[i2c_eeprom]
+enabled   = false
+pin_scl   = 13      # 4, 12, 13
+pin_sda   = 14      # 5, 11, 14
+address   = 0       # 0-7
+frequency = 100000  # Hz : 100000 * 2^N, N: 0-7
+
+##### Other features #####
+
+[ref_switch]
+#pin_left  = 16  # 2 12 16    (optional)
+#pin_home  = 17  # 4  7 15 17 (optional)
+#pin_right = 18  # 3 18       (optional)
