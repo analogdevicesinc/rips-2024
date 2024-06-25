@@ -13,13 +13,13 @@ if [[ -z "${COM_TMC_DATA}" ]]; then
 	exit 1
 fi
 
-if [[ -z "${Stimulus_Data}" ]]; then
-	echo "Stimulus_Data not defined"
+if [[ -z "${STIMULUS_DATA}" ]]; then
+	echo "STIMULUS_DATA not defined"
 	exit 1
 fi
 
-if [[ -z "${Capture_Data}" ]]; then
-	echo "Capture_Data not defined"
+if [[ -z "${CAPTURE_DATA}" ]]; then
+	echo "CAPTURE_DATA not defined"
 	exit 1
 fi
 
@@ -34,12 +34,12 @@ echo ""
 echo "Step #1. Run the Torque/Flux Loop Auto-Tuning script."
 echo ""
 python -u ../python/tmc9660_autotune_current_loop_flash_stimulus_v1.py $COM_TMC_DATA \
-    --sine-csv-file $Stimulus_Data/matlab_synthetic_flux_data_additive_sine_sweep_110823_combined_norm.csv \
-    --ud-output $Capture_Data/motor_ud_step_1000.csv \
-    --torque-output $Capture_Data/motor_flux_step_1000.csv \
-    --prbs-ud-output $Capture_Data/prbs_ud_output.csv \
-    --prbs-flux-output $Capture_Data/prbs_flux_output.csv \
-    --sine-flux-output $Capture_Data/sine_flux_multitone_output.csv \
+    --sine-csv-file $STIMULUS_DATA/matlab_synthetic_flux_data_additive_sine_sweep_110823_combined_norm.csv \
+    --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
+    --torque-output $CAPTURE_DATA/motor_flux_step_1000.csv \
+    --prbs-ud-output $CAPTURE_DATA/prbs_ud_output.csv \
+    --prbs-flux-output $CAPTURE_DATA/prbs_flux_output.csv \
+    --sine-flux-output $CAPTURE_DATA/sine_flux_multitone_output.csv \
     --damping-factor=1.0 \
     --tuning-method=5 \
     --shunt-resistance=0.005 \

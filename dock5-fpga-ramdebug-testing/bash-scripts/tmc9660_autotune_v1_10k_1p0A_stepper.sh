@@ -14,8 +14,8 @@ if [[ -z "${COM_TMC_DATA}" ]]; then
 	exit 1
 fi
 
-if [[ -z "${Capture_Data}" ]]; then
-	echo "Capture_Data not defined"
+if [[ -z "${CAPTURE_DATA}" ]]; then
+	echo "CAPTURE_DATA not defined"
 	exit 1
 fi
 
@@ -30,11 +30,11 @@ echo ""
 echo "Step #1. Run the Torque/Flux Loop Auto-Tuning script."
 echo ""
 python -u ../python/tmc9660_autotune_v1.py $COM_TMC_DATA \
-    --ud-output $Capture_Data/motor_ud_step_1000.csv \
-    --torque-output $Capture_Data/motor_flux_step_1000.csv \
-    --velocity-output $Capture_Data/motor_velocity_sawtooth.csv \
-    --offset-output $Capture_Data/motor_velocity_compensated.csv \
-    --systemID-output $Capture_Data/systemID.csv \
+    --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
+    --torque-output $CAPTURE_DATA/motor_flux_step_1000.csv \
+    --velocity-output $CAPTURE_DATA/motor_velocity_sawtooth.csv \
+    --offset-output $CAPTURE_DATA/motor_velocity_compensated.csv \
+    --systemID-output $CAPTURE_DATA/systemID.csv \
     --damping-factor=1.0 \
     --tuning-method=5 \
     --shunt-resistance=0.005 \
