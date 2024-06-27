@@ -13,6 +13,7 @@ from biquad_filter_calc import calculate_biquad_filter_coefficients, Tm01, Tmc46
 from TrajectoryProfileSawtoothClass import TrajectoryProfileSawtoothVelocity, TrajectoryProfileSawtoothAcceleration
 
 import pathlib
+import sys
 MY_SCRIPT_DIR = pathlib.Path(__file__).parent
 # This trick is necessary to get the import working from a different folder
 # that isn't a subfolder

@@ -7,6 +7,7 @@ from FeedForwardParamsClass import FeedForwardParams
 from register_helpers import to_register32
 
 import pathlib
+import sys
 MY_SCRIPT_DIR = pathlib.Path(__file__).parent
 # This trick is necessary to get the import working from a different folder
 # that isn't a subfolder

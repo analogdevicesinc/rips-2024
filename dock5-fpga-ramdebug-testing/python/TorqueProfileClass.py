@@ -21,6 +21,7 @@ from register_helpers import to_signed_32
 from register_helpers import to_signed_16
 
 import pathlib
+import sys
 MY_SCRIPT_DIR = pathlib.Path(__file__).parent
 # This trick is necessary to get the import working from a different folder
 # that isn't a subfolder

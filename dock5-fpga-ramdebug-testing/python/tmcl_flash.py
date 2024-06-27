@@ -15,6 +15,7 @@ SUBCMD_READ_BYTE     = 4
 MAX_FLASH_SIZE = 1 << 24
 
 import pathlib
+import sys
 MY_SCRIPT_DIR = pathlib.Path(__file__).parent
 # This trick is necessary to get the import working from a different folder
 # that isn't a subfolder
