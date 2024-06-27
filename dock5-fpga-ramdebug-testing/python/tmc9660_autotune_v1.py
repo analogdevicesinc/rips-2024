@@ -19,9 +19,6 @@ from pytrinamic.connections.connection_manager import ConnectionManager
 from pytrinamic.connections.serial_tmcl_interface import SerialTmclInterface
 from pytrinamic.tmcl import TMCLReplyStatusError
 import pytrinamic.RAMDebug as RAMDebug
-from ubltools.memory.tm01map._tm01_map_latest import MCC # ToDo: Clean this up
-from ubltools.helpers.field import Field
-from ubltools.helpers.register import Register
 
 from motorDataFileFunctionsClass import motorDataFileFunctionsClass
 from MotorConfigClass import MotorConfigClass
@@ -41,6 +38,16 @@ from FeedForwardParamsClass import FeedForwardParams
 from GainPhaseMarginClass import GainPhaseMarginClass
 
 from collections import OrderedDict
+
+import pathlib
+MY_SCRIPT_DIR = pathlib.Path(__file__).parent
+# This trick is necessary to get the import working from a different folder
+# that isn't a subfolder
+sys.path.insert(1, str(MY_SCRIPT_DIR / '../../UBL'))
+from MemoryMap import TM01
+
+# Grab the address blocks we care about
+MCC      = TM01.MCC
 
 ### Commandline arguments ######################################################
 parser = argparse.ArgumentParser(description="Start a Torque Loop System ID and Auto-Tuning run.")

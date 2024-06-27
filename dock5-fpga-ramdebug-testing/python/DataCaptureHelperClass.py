@@ -8,11 +8,19 @@ import math
 from TM01SystemUnitsSetup import TM01SystemUnitsSetup
 from register_helpers import to_register32
 from StimulusCaptureClass import StimulusCaptureClass
-from ubltools.memory.tm01map._tm01_map_latest import MCC # ToDo: Clean this up
 
 from biquad_filter_calc import calculate_biquad_filter_coefficients, Tm01, Tmc4671, LowPassFilter, AntiResonanceFilter
 from TrajectoryProfileSawtoothClass import TrajectoryProfileSawtoothVelocity, TrajectoryProfileSawtoothAcceleration
 
+import pathlib
+MY_SCRIPT_DIR = pathlib.Path(__file__).parent
+# This trick is necessary to get the import working from a different folder
+# that isn't a subfolder
+sys.path.insert(1, str(MY_SCRIPT_DIR / '../../UBL'))
+from MemoryMap import TM01
+
+# Grab the address blocks we care about
+MCC      = TM01.MCC
 
 class DataCaptureHelperClass: 
     def __init__(self, mySystem, myMotor, myInterface, mcchelp, myMotorTune): 

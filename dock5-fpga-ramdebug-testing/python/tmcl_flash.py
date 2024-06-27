@@ -3,7 +3,6 @@
 # This software is proprietary to Analog Devices, Inc. and its licensors.
 ################################################################################
 from pytrinamic.tmcl import TMCLCommand
-import ubltools
 
 TMCL_FLASH_CMD = TMCLCommand.TMCL_UF1
 
@@ -15,6 +14,12 @@ SUBCMD_READ_BYTE     = 4
 
 MAX_FLASH_SIZE = 1 << 24
 
+import pathlib
+MY_SCRIPT_DIR = pathlib.Path(__file__).parent
+# This trick is necessary to get the import working from a different folder
+# that isn't a subfolder
+sys.path.insert(1, str(MY_SCRIPT_DIR / '../../UBL'))
+from PartitionTypes import PartitionType
 
 class TMCLFlash():
     def __init__(self, connection):
@@ -42,7 +47,7 @@ class TMCLFlash():
         partition = {
             "start": partition_start,
             "size": partition_size,
-            "type": ubltools.protocols.constants.PartitionType(partition_type & 0x7F),
+            "type": PartitionType(partition_type & 0x7F),
             "writable": (partition_type & 0x80) != 0,
             }
 

@@ -4,12 +4,19 @@
 ################################################################################
 import sys
 
-from ubltools.memory.tm01map._tm01_map_latest import MCC  # ToDo: Clean this up
-from ubltools.helpers.field import Field
-from ubltools.helpers.register import Register
-
 import matplotlib.pyplot as plot
 from collections import OrderedDict
+
+import pathlib
+MY_SCRIPT_DIR = pathlib.Path(__file__).parent
+# This trick is necessary to get the import working from a different folder
+# that isn't a subfolder
+sys.path.insert(1, str(MY_SCRIPT_DIR / '../../UBL'))
+from MemoryMap import TM01
+
+# Grab the address blocks we care about
+MCC      = TM01.MCC
+
 
 class PlotHelperClass:
     def __init__(self):

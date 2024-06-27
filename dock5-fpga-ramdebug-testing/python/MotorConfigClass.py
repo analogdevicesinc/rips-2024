@@ -4,13 +4,24 @@
 ################################################################################
 
 import time
-from ubltools.memory.tm01map._tm01_map_latest import MCC, IOMATRIX, ADC, CLKCTRL, SYSCTRL # ToDo: Clean this up
-from ubltools.helpers.field import Field
-from ubltools.helpers.register import Register
 from MccHelpersClass import MccHelpersClass
 from TM01SystemUnitsSetup import TM01SystemUnitsSetup
 
 from register_helpers import to_register32
+
+import pathlib
+MY_SCRIPT_DIR = pathlib.Path(__file__).parent
+# This trick is necessary to get the import working from a different folder
+# that isn't a subfolder
+sys.path.insert(1, str(MY_SCRIPT_DIR / '../../UBL'))
+from MemoryMap import TM01
+
+# Grab the address blocks we care about
+MCC      = TM01.MCC
+IOMATRIX = TM01.IOMATRIX
+ADC      = TM01.ADC
+CLKCTRL  = TM01.CLKCTRL
+SYSCTRL  = TM01.SYSCTRL
 
 class MotorConfigClass:
     

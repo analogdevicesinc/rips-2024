@@ -2,10 +2,19 @@
 # Copyright © 2024 Analog Devices Inc. All Rights Reserved.
 # This software is proprietary to Analog Devices, Inc. and its licensors.
 ################################################################################
-from ubltools.memory.tm01map._tm01_map_latest import MCC
 from MccHelpersClass import MccHelpersClass
 from FeedForwardParamsClass import FeedForwardParams
 from register_helpers import to_register32
+
+import pathlib
+MY_SCRIPT_DIR = pathlib.Path(__file__).parent
+# This trick is necessary to get the import working from a different folder
+# that isn't a subfolder
+sys.path.insert(1, str(MY_SCRIPT_DIR / '../../UBL'))
+from MemoryMap import TM01
+
+# Grab the address blocks we care about
+MCC      = TM01.MCC
 
 class VelocityWithFeedForward(object):
 	"""Small class to store the three parameters required for computing the feedforward torque"""
