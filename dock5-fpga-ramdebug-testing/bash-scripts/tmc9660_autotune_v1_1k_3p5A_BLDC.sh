@@ -1,17 +1,28 @@
 #!/bin/bash
+################################################################################
+# Copyright © 2024 Analog Devices Inc. All Rights Reserved.
+# This software is proprietary to Analog Devices, Inc. and its licensors.
+################################################################################
+
 set -e
 
 echo "#########################################################################################################"
-echo "# Setup Default Environment Variables.                                                                          #"
+echo "# Check Environment Variables.                                                                          #"
 echo "#########################################################################################################"
-: ${LandungsbrueckeController_Tools:=../..//LandungsbrueckeController/tools}
-: ${Ubltools_Scripts:=../../Ubltools/scripts}
-: ${TM01_Workspace:=../../Dock5_Package_20220728_v0.9.3/TM01_workspace}
-: ${Stimulus_Data:=/c/users/cprende/Software/MotionControlAI/dock5-fpga-ramdebug-testing/stimulus_data{}
-: ${Capture_Data:=/c/users/cprende/Software/MotionControlAI/dock5-fpga-ramdebug-testing/capture_data{}
-: ${JSON_Config:=/c/users/cprende/Software/MotionControlAI/dock5-fpga-ramdebug-testing/json{}
-: ${COM_TMC_CONTROL:=COM17}
-: ${COM_TMC_DATA:=COM16}
+if [[ -z "${COM_TMC_DATA}" ]]; then
+	echo "COM_TMC_DATA not defined"
+	exit 1
+fi
+
+if [[ -z "${STIMULUS_DATA}" ]]; then
+	echo "STIMULUS_DATA not defined"
+	exit 1
+fi
+
+if [[ -z "${CAPTURE_DATA}" ]]; then
+	echo "CAPTURE_DATA not defined"
+	exit 1
+fi
 
 echo "#########################################################################################################"
 echo "# Basic bash script to run the Torque/Flux Auto-Tuning script.                                          #"
@@ -23,12 +34,13 @@ echo "#          and upload Firmware.                                           
 echo ""
 echo "Step #1. Run the Torque/Flux Loop Auto-Tuning script."
 echo ""
-python -u ../python/tmc9660_autotune_v1.py $COM_TMC_DATA \
-    --ud-output $Capture_Data/motor_ud_step_1000.csv \
-    --torque-output $Capture_Data/motor_flux_step_1000.csv \
-    --velocity-output $Capture_Data/motor_velocity_sawtooth.csv \
-    --offset-output $Capture_Data/motor_velocity_compensated.csv \
-    --systemID-output $Capture_Data/systemID.csv \
+python -u ../python/tmc9660_autotune_current_loop_flash_stimulus_v1.py $COM_TMC_DATA \
+    --sine-csv-file $STIMULUS_DATA/matlab_synthetic_flux_data_additive_sine_sweep_110823_combined_norm.csv \
+    --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
+    --torque-output $CAPTURE_DATA/motor_flux_step_1000.csv \
+    --prbs-ud-output $CAPTURE_DATA/prbs_ud_output.csv \
+    --prbs-flux-output $CAPTURE_DATA/prbs_flux_output.csv \
+    --sine-flux-output $CAPTURE_DATA/sine_flux_multitone_output.csv \
     --damping-factor=1.0 \
     --tuning-method=5 \
     --shunt-resistance=0.005 \
@@ -37,8 +49,13 @@ python -u ../python/tmc9660_autotune_v1.py $COM_TMC_DATA \
     --poles=4 \
     --maximum-current=3.47 \
     --abn-encoder-resolution=1024 \
-    --abn-encoder-direction=1
+    --abn-encoder-direction=1 \
+    --enable-sine-test \
+    --current-loop-test-channel="Flux" 
 sleep 1.0
 echo ""
 echo "End of Script."
 echo ""
+    # --enable-sine-test \
+    # --enable-prbs-test \
+
