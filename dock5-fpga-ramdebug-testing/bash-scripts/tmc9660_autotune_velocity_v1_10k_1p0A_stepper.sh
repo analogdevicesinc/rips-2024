@@ -14,11 +14,6 @@ if [[ -z "${COM_TMC_DATA}" ]]; then
 	exit 1
 fi
 
-if [[ -z "${STIMULUS_DATA}" ]]; then
-	echo "STIMULUS_DATA not defined"
-	exit 1
-fi
-
 if [[ -z "${CAPTURE_DATA}" ]]; then
 	echo "CAPTURE_DATA not defined"
 	exit 1
@@ -34,37 +29,26 @@ echo "#          and upload Firmware.                                           
 echo ""
 echo "Step #1. Run the Torque/Flux Loop Auto-Tuning script."
 echo ""
-<<<<<<< HEAD
-python -u ../python/tmc9660_autotune_current_loop_flash_stimulus_v1.py $COM_TMC_DATA \
-    --sine-csv-file $STIMULUS_DATA/matlab_synthetic_flux_data_additive_sine_sweep_110823_combined_norm.csv \
-    --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
-    --torque-output $CAPTURE_DATA/motor_flux_step_1000.csv \
-    --prbs-ud-output $CAPTURE_DATA/prbs_ud_output.csv \
-    --prbs-flux-output $CAPTURE_DATA/prbs_flux_output.csv \
-    --sine-flux-output $CAPTURE_DATA/sine_flux_multitone_output.csv \
-=======
-python -u ../python/tmc9660_autotune_v1.py $COM_TMC_DATA \
+python -u ../python/tmc9660_autotune_velocity_loop_flash_stimulus_v1.py $COM_TMC_DATA \
+    --sine-csv-file $STIMULUS_DATA/matlab_synthetic_w_ref_data_additive_sine_sweep_110823_combined_norm.csv \
     --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
     --torque-output $CAPTURE_DATA/motor_flux_step_1000.csv \
     --velocity-output $CAPTURE_DATA/motor_velocity_sawtooth.csv \
     --offset-output $CAPTURE_DATA/motor_velocity_compensated.csv \
     --systemID-output $CAPTURE_DATA/systemID.csv \
->>>>>>> 05a04469232ab2fdf2f64763952c528d342c2e10
+    --sine-flux-output $CAPTURE_DATA/sine_flux_multitone_output.csv \
     --damping-factor=1.0 \
     --tuning-method=5 \
     --shunt-resistance=0.005 \
     --shunt-op-amp-gain=20.0 \
-    --target-motor="BLDC" \
-    --poles=4 \
-    --maximum-current=3.47 \
-    --abn-encoder-resolution=1024 \
-    --abn-encoder-direction=1 \
+    --poles=50 \
+    --maximum-current=1.0 \
+    --abn-encoder-resolution=10000 \
     --enable-sine-test \
-    --current-loop-test-channel="Flux" 
+    --current-loop-test-channel="Torque"
 sleep 1.0
 echo ""
 echo "End of Script."
 echo ""
-    # --enable-sine-test \
-    # --enable-prbs-test \
-
+#    --current-loop-bw=2000.0 \
+#    --current-loop-bw=3296.2 \
