@@ -740,8 +740,8 @@ if args.enable_sine_test:
     myStimulusFluxReaderClass.GenerateStimulusData()
 
     # ABN encoder configuration (Init encoder (mode 0))
-    myMotor.init_ext_encoder(voltage_codes=target_voltageext_codes)
-
+    myMotor.init_abn_encoder(voltage_codes=target_voltageext_codes)
+    time.sleep(1)
 
     mcchelp.mcc_write(MCC.MOTION_CONFIG, 0x00000000)     # Switch to Stopped.
     myMotor.zero_voltageext()
@@ -757,10 +757,10 @@ if args.enable_sine_test:
     print("#")
 
     # Sampling Frequency divisors
-    RAMDEBUG_DIVISOR = 1      # Measurement or Actual data is played at the PWM Rate / RAMDEBUG_DIVISOR
+    RAMDEBUG_DIVISOR = 256      # Measurement or Actual data is played at the PWM Rate / RAMDEBUG_DIVISOR
     RAMDEBUG_RATE = PWM_FREQUENCY/RAMDEBUG_DIVISOR
     RAMDEBUG_PERIOD = 1/RAMDEBUG_RATE
-    STIMULUS_DIVISOR = 1      # Stimulus or Target data is played at the PWM Rate / STIMULUS_DIVISOR
+    STIMULUS_DIVISOR = 256      # Stimulus or Target data is played at the PWM Rate / STIMULUS_DIVISOR
     STIMULUS_RATE = PWM_FREQUENCY/STIMULUS_DIVISOR
     STIMULUS_PERIOD = 1/STIMULUS_RATE
 
@@ -794,20 +794,15 @@ if args.enable_sine_test:
     myMotor.zero_positionactual()
 
     mySineFluxStimCapture = StimulusCaptureClass(myInterface, RAMDEBUG_SAMPLES, RAMDEBUG_DIVISOR, STIMULUS_DIVISOR, CAPTURE_REGS, RAMDEBUG_PERIOD, RAMDEBUG_PRETRIGGER_SAMPLES)
-    
+
+    time.sleep(1)
+    print("################ STARTING VELOCITY CAPTURE ##################")
+    mcchelp.mcc_write(MCC.MOTION_CONFIG, 0x00000002) # Switch to Velocity Mode. 01 for torque mode, 03 for position mode
     stimilus_target_register = "MCC.PID_VELOCITY_TARGET"
     raw_data = mySineFluxStimCapture.RAMDebug_Setup_Capture(stim_register0=stimilus_target_register, stim_scalar0=1)
-   
-    print(len(raw_data))
+    myDataCapture.zero_stop_motor()# Switch to Stopped.
+    time.sleep(1)
     data = mySineFluxStimCapture.GrabExportData(raw_data, args.plot, False, args.input, args.sine_flux_output)
-
-    mcchelp.mcc_write(MCC.MOTION_CONFIG, 0x00000000) # Switched to Stopped.
-    myMotor.zero_torquefluxtarget()
-    myMotor.zero_torquefluxactual()
-    myMotor.zero_velocitytarget()
-    myMotor.zero_velocityactual()
-    myMotor.zero_positiontarget()
-    myMotor.zero_positionactual()
 
 else:
     pass

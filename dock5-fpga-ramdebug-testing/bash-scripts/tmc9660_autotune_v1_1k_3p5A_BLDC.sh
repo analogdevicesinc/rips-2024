@@ -34,7 +34,6 @@ echo "#          and upload Firmware.                                           
 echo ""
 echo "Step #1. Run the Torque/Flux Loop Auto-Tuning script."
 echo ""
-<<<<<<< HEAD
 python -u ../python/tmc9660_autotune_current_loop_flash_stimulus_v1.py $COM_TMC_DATA \
     --sine-csv-file $STIMULUS_DATA/matlab_synthetic_flux_data_additive_sine_sweep_110823_combined_norm.csv \
     --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
@@ -42,14 +41,6 @@ python -u ../python/tmc9660_autotune_current_loop_flash_stimulus_v1.py $COM_TMC_
     --prbs-ud-output $CAPTURE_DATA/prbs_ud_output.csv \
     --prbs-flux-output $CAPTURE_DATA/prbs_flux_output.csv \
     --sine-flux-output $CAPTURE_DATA/sine_flux_multitone_output.csv \
-=======
-python -u ../python/tmc9660_autotune_v1.py $COM_TMC_DATA \
-    --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
-    --torque-output $CAPTURE_DATA/motor_flux_step_1000.csv \
-    --velocity-output $CAPTURE_DATA/motor_velocity_sawtooth.csv \
-    --offset-output $CAPTURE_DATA/motor_velocity_compensated.csv \
-    --systemID-output $CAPTURE_DATA/systemID.csv \
->>>>>>> 05a04469232ab2fdf2f64763952c528d342c2e10
     --damping-factor=1.0 \
     --tuning-method=5 \
     --shunt-resistance=0.005 \
