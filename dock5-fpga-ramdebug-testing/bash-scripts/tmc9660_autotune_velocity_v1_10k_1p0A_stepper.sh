@@ -30,7 +30,7 @@ echo ""
 echo "Step #1. Run the Torque/Flux Loop Auto-Tuning script."
 echo ""
 python -u ../python/tmc9660_autotune_velocity_loop_flash_stimulus_v1.py $COM_TMC_DATA \
-    --sine-csv-file $STIMULUS_DATA/velocity_step_1000000.csv \
+    --sine-csv-file $STIMULUS_DATA/long_sine_wave_439.csv \
     --ud-output $CAPTURE_DATA/motor_ud_step_1000.csv \
     --torque-output $CAPTURE_DATA/motor_flux_step_1000.csv \
     --velocity-output $CAPTURE_DATA/motor_velocity_sawtooth.csv \
