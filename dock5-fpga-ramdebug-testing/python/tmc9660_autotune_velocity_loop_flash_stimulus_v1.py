@@ -778,8 +778,8 @@ if args.enable_sine_test:
     # Define the Capture Regs.
     CAPTURE_REGS = [
         "MCC.PID_VELOCITY_TARGET",
-        "MCC.PIDIN_TORQUE_FLUX_TARGET",           # <- This should be the stimulated register
-        "MCC.PID_TORQUE_FLUX_ACTUAL",
+        # "MCC.PIDIN_TORQUE_FLUX_TARGET",           # <- This should be the stimulated register
+        # "MCC.PID_TORQUE_FLUX_ACTUAL",
         "MCC.PID_VELOCITY_ACTUAL"
         ]
     RAMDEBUG_SAMPLES = int(RAMDEBUG_CAPACITY/(4*len(CAPTURE_REGS)))
@@ -799,11 +799,13 @@ if args.enable_sine_test:
     print("################ STARTING VELOCITY CAPTURE ##################")
     mcchelp.mcc_write(MCC.MOTION_CONFIG, 0x00000002) # Switch to Velocity Mode. 01 for torque mode, 03 for position mode
     stimilus_target_register = "MCC.PID_VELOCITY_TARGET"
-    raw_data = mySineFluxStimCapture.RAMDebug_Setup_Capture(stim_register0=stimilus_target_register, stim_scalar0=1)
+    raw_data = mySineFluxStimCapture.RAMDebug_Setup_Capture(stim_register0=stimilus_target_register, stim_scalar0=10)
     myDataCapture.zero_stop_motor()# Switch to Stopped.
     time.sleep(1)
+    
     data = mySineFluxStimCapture.GrabExportData(raw_data, args.plot, False, args.input, args.sine_flux_output)
-
+    myDataCapture.zero_stop_motor()# Switch to Stopped.
+    time.sleep(1)
 else:
     pass
 
@@ -822,68 +824,68 @@ else:
 print("Testing Complete - Re-Initializing Encoder and Switching to ABN Mode.")
 myMotor.init_abn_encoder(voltage_codes=target_voltageext_codes)
 
-#############################################################################
+# #############################################################################
 
-output_summary_fname = os.path.splitext(args.systemID_output)[0] + '_' + args.target_motor + '.csv'
-myFileIO = motorDataFileFunctionsClass(output_summary_fname)
-myFileIO.write_summary(headers, data_summary)
+# output_summary_fname = os.path.splitext(args.systemID_output)[0] + '_' + args.target_motor + '.csv'
+# myFileIO = motorDataFileFunctionsClass(output_summary_fname)
+# myFileIO.write_summary(headers, data_summary)
 
 
-print("#")
-print(" Step 9: Run a Closed Loop Velocity Ramp Test (with Feedforward Torque Offset Compensation).")
-print("#")
+# print("#")
+# print(" Step 9: Run a Closed Loop Velocity Ramp Test (with Feedforward Torque Offset Compensation).")
+# print("#")
 
-myDataCapture.zero_stop_motor()# Switch to Stopped.
+# myDataCapture.zero_stop_motor()# Switch to Stopped.
 
-# Configure Feedforward Parameters.
-velocity_scaling = mySystem.get_velocity_scaling()
-current_scaling = mySystem.get_flux_scaling()
+# # Configure Feedforward Parameters.
+# velocity_scaling = mySystem.get_velocity_scaling()
+# current_scaling = mySystem.get_flux_scaling()
 
-static_friction_codes = fs_est / (3/2*K_est) / current_scaling
-viscous_friction_codes = b_est / (3/2*K_est) / current_scaling * velocity_scaling
-inertia_codes = J_est / (3/2*K_est) / current_scaling * velocity_scaling
-my_feedforwardparams = FeedForwardParams(static_friction_codes, viscous_friction_codes, inertia_codes)
+# static_friction_codes = fs_est / (3/2*K_est) / current_scaling
+# viscous_friction_codes = b_est / (3/2*K_est) / current_scaling * velocity_scaling
+# inertia_codes = J_est / (3/2*K_est) / current_scaling * velocity_scaling
+# my_feedforwardparams = FeedForwardParams(static_friction_codes, viscous_friction_codes, inertia_codes)
 
-print("#")
-print("# Static Friction Compensation Value = ", static_friction_codes)
-print("# Dynamic Friction Compensation Value = ", viscous_friction_codes)
-print("# Inertia Compensation Value = ", inertia_codes)
-print("#")
+# print("#")
+# print("# Static Friction Compensation Value = ", static_friction_codes)
+# print("# Dynamic Friction Compensation Value = ", viscous_friction_codes)
+# print("# Inertia Compensation Value = ", inertia_codes)
+# print("#")
 
-# Setup Velocity RAMDebug Capture Class & Trajectory.
-# RAMDEBUG_DIVISOR = 128
-CAPTURE_REGS = [
-    "MCC.PIDIN_TORQUE_FLUX_TARGET",           # <- This should be the stimulated register
-    "MCC.PID_TORQUE_FLUX_ACTUAL",
-    "MCC.PIDIN_VELOCITY_TARGET",
-    "MCC.PID_VELOCITY_ACTUAL"
-    ]
-# Create Velocity Ramp and RAMDebug Capture Object.
-if args.end_stop_detect: 
-    RAMDEBUG_DIVISOR, sawtooth_velocity_codes, my_trajectory, myVelocityStimCapture, RAMDEBUG_PERIOD = myDataCapture.create_velocity_ramp_RAMDebug_Instance(peak_time, CAPTURE_REGS, RAMDEBUG_CAPACITY, max_sawtooth_velocity, system_id_range, max_acceleration=max_acceleration )
-else:
-    RAMDEBUG_DIVISOR, sawtooth_velocity_codes, my_trajectory, myVelocityStimCapture, RAMDEBUG_PERIOD = myDataCapture.create_velocity_ramp_RAMDebug_Instance(peak_time, CAPTURE_REGS, RAMDEBUG_CAPACITY, max_sawtooth_velocity, system_id_range, target_sawtooth_velocity=target_sawtooth_velocity, range_turns=range_turns, max_acceleration=max_acceleration )
+# # Setup Velocity RAMDebug Capture Class & Trajectory.
+# # RAMDEBUG_DIVISOR = 128
+# CAPTURE_REGS = [
+#     "MCC.PIDIN_TORQUE_FLUX_TARGET",           # <- This should be the stimulated register
+#     "MCC.PID_TORQUE_FLUX_ACTUAL",
+#     "MCC.PIDIN_VELOCITY_TARGET",
+#     "MCC.PID_VELOCITY_ACTUAL"
+#     ]
+# # Create Velocity Ramp and RAMDebug Capture Object.
+# if args.end_stop_detect: 
+#     RAMDEBUG_DIVISOR, sawtooth_velocity_codes, my_trajectory, myVelocityStimCapture, RAMDEBUG_PERIOD = myDataCapture.create_velocity_ramp_RAMDebug_Instance(peak_time, CAPTURE_REGS, RAMDEBUG_CAPACITY, max_sawtooth_velocity, system_id_range, max_acceleration=max_acceleration )
+# else:
+#     RAMDEBUG_DIVISOR, sawtooth_velocity_codes, my_trajectory, myVelocityStimCapture, RAMDEBUG_PERIOD = myDataCapture.create_velocity_ramp_RAMDebug_Instance(peak_time, CAPTURE_REGS, RAMDEBUG_CAPACITY, max_sawtooth_velocity, system_id_range, target_sawtooth_velocity=target_sawtooth_velocity, range_turns=range_turns, max_acceleration=max_acceleration )
 
-# peak_time, sawtooth_velocity_codes, my_trajectory, myVelocityStimCapture, RAMDEBUG_PERIOD = myDataCapture.create_velocity_ramp_RAMDebug_Instance(RAMDEBUG_DIVISOR, CAPTURE_REGS, RAMDEBUG_CAPACITY, max_sawtooth_velocity, system_id_range=system_id_range, max_acceleration=max_acceleration)
+# # peak_time, sawtooth_velocity_codes, my_trajectory, myVelocityStimCapture, RAMDEBUG_PERIOD = myDataCapture.create_velocity_ramp_RAMDebug_Instance(RAMDEBUG_DIVISOR, CAPTURE_REGS, RAMDEBUG_CAPACITY, max_sawtooth_velocity, system_id_range=system_id_range, max_acceleration=max_acceleration)
 
-print("#")
-print(" Capture the data for Compensated Closed Loop Velocity.")
-print("#")
+# print("#")
+# print(" Capture the data for Compensated Closed Loop Velocity.")
+# print("#")
 
-time.sleep(1)
-print("################ STARTING VELOCITY CAPTURE ##################")
-mcchelp.mcc_write(MCC.MOTION_CONFIG, 0x00000002) # Switch to Velocity Mode. 01 for torque mode, 03 for position mode
-raw_data = myVelocityStimCapture.RAMDebug_Capture_Velocity_Profile(my_trajectory, my_feedforwardparams, use_firmware_upgrade_method=False)
-myDataCapture.zero_stop_motor()# Switch to Stopped.
-time.sleep(1)
+# time.sleep(1)
+# print("################ STARTING VELOCITY CAPTURE ##################")
+# mcchelp.mcc_write(MCC.MOTION_CONFIG, 0x00000002) # Switch to Velocity Mode. 01 for torque mode, 03 for position mode
+# raw_data = myVelocityStimCapture.RAMDebug_Capture_Velocity_Profile(my_trajectory, my_feedforwardparams, use_firmware_upgrade_method=False)
+# myDataCapture.zero_stop_motor()# Switch to Stopped.
+# time.sleep(1)
 
-data = myVelocityStimCapture.GrabExportData(raw_data, args.plot, args.plot_disappear, args.input, args.velocity_output)
+# data = myVelocityStimCapture.GrabExportData(raw_data, args.plot, args.plot_disappear, args.input, args.velocity_output)
 
-print("################ COMPLETED VELOCITY CAPTURE ##################")
+# print("################ COMPLETED VELOCITY CAPTURE ##################")
 
-# Close the connection.
-myInterface.close()
-print("#")
-print(" Done with Velocity Closed Loop Test.")
-print("#")
-print("Done.")
+# # Close the connection.
+# myInterface.close()
+# print("#")
+# print(" Done with Velocity Closed Loop Test.")
+# print("#")
+# print("Done.")
