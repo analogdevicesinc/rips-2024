@@ -1,6 +1,5 @@
 ################################################################################
-# Copyright © 2024 Analog Devices Inc. All Rights Reserved.
-# This software is proprietary to Analog Devices, Inc. and its licensors.
+# Copyright © 2024 Analog Devices, Inc.
 ################################################################################
 def to_signed_16(x, mask, shift):
     m = (x >> shift) & mask
